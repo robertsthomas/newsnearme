@@ -1,0 +1,7 @@
+{
+  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.resolveGlobalModules": false,
+  "prettier.requireConfig": true,
+  "typescript.format.enable": false,
+  "javascript.format.enable": false
+}
