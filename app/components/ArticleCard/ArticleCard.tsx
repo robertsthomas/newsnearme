@@ -3,13 +3,16 @@ import { Card } from '../ui/card';
 import type { Article } from 'types';
 import { CalendarDays, Newspaper } from 'lucide-react';
 import dayjs from 'dayjs';
+import { IMAGE_URL_PREFIX } from '~/lib/constants';
+import { getArticleId } from '~/lib/utils';
 
 export const ArticleCard = ({ article }: { article: Article }) => {
   const firstImage = article.multimedia[0]?.url;
+  const articleId = getArticleId(article._id);
 
   return (
     <Link
-      to='/article'
+      to={`articles/${articleId}`}
       key={article._id}
       className='hover:outline hover:outline-2 hover:outline-slate-400 rounded-lg group'
     >
@@ -18,9 +21,7 @@ export const ArticleCard = ({ article }: { article: Article }) => {
         <div className='p-6'>
           <div className='flex items-center text-gray-500 text-sm'>
             <CalendarDays size={16} className='mr-1' />
-            <span>
-              {dayjs(article.pub_date.toString()).format('MMM D, YYYY')}
-            </span>
+            <span>{dayjs(article.pub_date).format('MMM D, YYYY')}</span>
           </div>
           <h3 className='font-bold text-xl mb-2 text-gray-800 line-clamp-2 group-hover:text-slate-600 transition-colors duration-300'>
             {article.headline.main}
@@ -45,7 +46,7 @@ function ArticleCardHeader({
     return (
       <img
         data-id='article-card-image'
-        src={`https://static01.nyt.com/${image}`}
+        src={`${IMAGE_URL_PREFIX}${image}`}
         alt={article.headline.main}
         className='w-full h-1/2 object-cover object-center rounded-t-lg'
       />

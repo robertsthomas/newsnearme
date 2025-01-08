@@ -1,9 +1,10 @@
 import { fetchArticleSearch } from '~/functions/api';
-import type { Route } from './+types/home';
+import type { Route } from './+types/index';
 import type { Article } from 'types';
 import { data } from 'react-router';
 import { ArticleCard } from '~/components/ArticleCard';
 import { useUserLocation } from '~/hooks/useUserLocation';
+import { getArticleId } from '~/lib/utils';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -33,13 +34,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   useUserLocation();
 
   return (
-    <main className='container mx-auto px-4 py-8'>
-      <div className='py-16'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {articles.map((article) => (
-            <ArticleCard article={article} key={article._id} />
-          ))}
-        </div>
+    <main className='container mx-auto px-4 py-24'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+        {articles.map((article) => (
+          <ArticleCard article={article} key={getArticleId(article._id)} />
+        ))}
       </div>
     </main>
   );
