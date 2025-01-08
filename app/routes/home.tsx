@@ -1,30 +1,46 @@
+import { fetchArticleSearch } from "~/functions/api";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import type { Article } from "types";
+import { data } from "react-router";
+import { ArticleCard } from "~/components/ArticleCard";
+import { useUserLocation } from "~/hooks/useUserLocation";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "News Near Me" },
+    { name: "description", content: "Welcome to NNM!" },
   ];
 }
 
-export function loader({ context }: Route.LoaderArgs) {
-  return { message: context.VALUE_FROM_VERCEL };
+export function headers(_: Route.HeadersArgs) {
+  return {
+    "Cache-Control": "public, max-age=3600" // stale-while-revalidate=86400
+  };
+}
+
+export async function loader({ context, request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const location = url.searchParams.get("location") || ""
+
+  const articlesQuery = await fetchArticleSearch(location)
+  const articles = articlesQuery.response?.docs as Article[]
+
+  return data({ articles });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
+  const { articles } = loaderData;
+  useUserLocation()
+
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* 
-          {articlesQuery.data?.response?.docs.map((article: Article) => (
 
-            <Card key={article._id} className="w-full">
-              <img src={`https://static01.nyt.com/${article.multimedia[0]?.url}`} className="w-full h-full object-cover" />
-              <h1>{article.snippet}</h1>
-            </Card>
-          ))} */}
+          {articles.map((article) => (
+            <ArticleCard article={article} key={article._id} />
+
+          ))}
         </div>
 
       </div >
