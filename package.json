@@ -8,6 +8,8 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@fontsource-variable/raleway": "^5.1.1",
+    "@radix-ui/react-slot": "^1.1.1",
     "@react-router/express": "^7.1.1",
     "@react-router/node": "^7.1.1",
     "@vercel/node": "^3.2.25",

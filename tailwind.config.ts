@@ -4,19 +4,13 @@ export default {
   darkMode: ['class'],
   content: ['./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    fontFamily: {
+      sans: [
+        'Poppins', // Replace default sans-serif with Raleway
+        'serif', // Fallback font
+      ],
+    },
     extend: {
-      fontFamily: {
-        sans: [
-          'Inter"',
-          'ui-sans-serif',
-          'system-ui',
-          'sans-serif',
-          'Apple Color Emoji"',
-          'Segoe UI Emoji"',
-          'Segoe UI Symbol"',
-          'Noto Color Emoji"',
-        ],
-      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

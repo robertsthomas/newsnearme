@@ -4,6 +4,12 @@ import type { Route } from './+types/article';
 import type { Article } from 'types';
 import { getArticleId } from '~/lib/utils';
 
+export function headers(_: Route.HeadersArgs) {
+  return {
+    'Cache-Control': 'public, max-age=31536000, immutable',
+  };
+}
+
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const location =
     localStorage.getItem('userLocation')?.replace(/['"]/g, '') || '';
@@ -21,5 +27,6 @@ export async function clientLoader({ params }: Route.LoaderArgs) {
 }
 export default function Article({ loaderData }: Route.ComponentProps) {
   const { article } = loaderData;
+  console.log('article', article);
   return <main className='container mx-auto px-4 py-24'>Article</main>;
 }
