@@ -5,6 +5,11 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(({ isSsrBuild, command }) => ({
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './app/test/setup.ts',
+  },
   build: {
     rollupOptions: isSsrBuild
       ? {
@@ -20,5 +25,5 @@ export default defineConfig(({ isSsrBuild, command }) => ({
   ssr: {
     noExternal: command === 'build' ? true : undefined,
   },
-  plugins: [reactRouter(), tsconfigPaths()],
+  plugins: [!process.env.VITEST && reactRouter(), tsconfigPaths()],
 }));

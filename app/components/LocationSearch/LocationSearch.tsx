@@ -15,9 +15,7 @@ export const LocationSearch = ({
   withButton = false,
   onSearch = () => {},
   size = 'default',
-  placeholder = 'Select a location',
 }: {
-  placeholder?: string;
   withButton?: boolean;
   size?: 'lg' | 'sm' | 'default';
   onSearch: (location: string) => void;
@@ -40,7 +38,7 @@ export const LocationSearch = ({
     <div className='flex items-center gap-0 w-full'>
       {withButton && (
         <Button size={size} className='rounded-r-none pointer-events-none'>
-          <Search className='w-4 h-4' />
+          <Search data-testid='location-search-button' className='w-4 h-4' />
         </Button>
       )}
 
@@ -53,7 +51,10 @@ export const LocationSearch = ({
             withButton ? 'rounded-l-none' : ''
           )}
         >
-          <SelectValue placeholder={location} />
+          <SelectValue
+            data-testid='location-search-value'
+            placeholder={location}
+          />
         </SelectTrigger>
         <SelectContent>
           {states.map((state) => {

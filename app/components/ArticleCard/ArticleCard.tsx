@@ -45,7 +45,7 @@ function ArticleCardHeader({
   if (image) {
     return (
       <img
-        data-id='article-card-image'
+        data-testid='article-card-image'
         src={`${IMAGE_URL_PREFIX}${image}`}
         alt={article.headline.main}
         className='w-full h-1/2 object-cover object-center rounded-t-lg'
@@ -54,11 +54,11 @@ function ArticleCardHeader({
   }
 
   return (
-    <div
-      className='w-full grid place-items-center h-1/2 bg-gray-100'
-      data-id='article-card-icon'
-    >
-      <Newspaper className='w-16 h-16 text-gray-400' />
+    <div className='w-full grid place-items-center h-1/2 bg-gray-100'>
+      <Newspaper
+        data-testid='article-card-icon'
+        className='w-16 h-16 text-gray-400'
+      />
     </div>
   );
 }
