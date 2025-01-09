@@ -20,8 +20,8 @@ export const useUserLocation = () => {
     }
 
     if (storedLocation) {
-      setLocation(JSON.parse(storedLocation));
-      params.set('location', storedLocation);
+      setLocation(JSON.parse(storedLocation).replace(/['"]/g, ''));
+      params.set('location', storedLocation.replace(/['"]/g, ''));
       setSearchParams(params);
     } else {
       getIp()
@@ -38,6 +38,7 @@ export const useUserLocation = () => {
   }, [location]);
 
   const setUserLocation = (location: string) => {
+    console.log('setUserLocation', location);
     params.set('location', location);
     setSearchParams(params);
     localStorage.setItem('userLocation', JSON.stringify(location));
