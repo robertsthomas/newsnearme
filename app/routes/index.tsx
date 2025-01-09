@@ -5,7 +5,7 @@ import { data, useNavigation } from 'react-router';
 import { ArticleCard } from '~/components/ArticleCard';
 import { useUserLocation } from '~/hooks/useUserLocation';
 import { getArticleId } from '~/lib/utils';
-import { LocationSearch } from '~/components/LocationSearch/LocationSearch';
+import { LocationSearch } from '~/components/LocationSearch';
 import { Loader2 } from 'lucide-react';
 
 export function meta({}: Route.MetaArgs) {
@@ -47,7 +47,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <main className='container mx-auto px-4 py-24 h-screen'>
+    <main className='container mx-auto px-4 py-24 h-screen pb-44'>
       {location ? (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
           {articles.map((article) => (

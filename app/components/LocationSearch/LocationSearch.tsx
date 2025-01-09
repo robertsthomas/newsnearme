@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { states } from '~/lib/constants';
+import { useUserLocation } from '~/hooks/useUserLocation';
 
 export const LocationSearch = ({
   withButton = false,
@@ -21,6 +22,7 @@ export const LocationSearch = ({
   size?: 'lg' | 'sm' | 'default';
   onSearch: (location: string) => void;
 }) => {
+  const { location } = useUserLocation();
   const inputSizeMap =
     size === 'lg'
       ? 'size-12 placeholder:text-lg'
@@ -51,7 +53,7 @@ export const LocationSearch = ({
             withButton ? 'rounded-l-none' : ''
           )}
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={location} />
         </SelectTrigger>
         <SelectContent>
           {states.map((state) => {
