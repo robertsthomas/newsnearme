@@ -50,7 +50,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className='container mx-auto px-4 py-24 h-screen pb-44'>
       {location ? (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {articles.map((article) => (
+          {articles?.map((article) => (
             <ArticleCard article={article} key={getArticleId(article._id)} />
           ))}
         </div>

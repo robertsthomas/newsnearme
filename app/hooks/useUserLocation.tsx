@@ -38,7 +38,6 @@ export const useUserLocation = () => {
   }, [location]);
 
   const setUserLocation = (location: string) => {
-    console.log('setUserLocation', location);
     params.set('location', location);
     setSearchParams(params);
     localStorage.setItem('userLocation', JSON.stringify(location));
