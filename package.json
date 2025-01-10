@@ -6,7 +6,8 @@
     "build": "react-router build && node vercel/prepare.js",
     "dev": "cross-env NODE_ENV=development node ./dev-server.js",
     "typecheck": "react-router typegen && tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "test:e2e": "concurrently \"pnpm dev\" \"npx playwright test\""
   },
   "dependencies": {
     "@fontsource-variable/raleway": "^5.1.1",
@@ -41,6 +42,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",

@@ -1,20 +1,28 @@
-# Welcome to React Router!
+# Welcome to the News Near Me Project!
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A React application that displays news articles from the New York Times API from preselected locations.
 
-## Features
+## Technologies
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
+- React
+- React Router v7
+- TailwindCSS
+- Shadcn UI
+- Vitest and Playwright
+
 - 📖 [React Router docs](https://reactrouter.com/)
 
 ## Getting Started
 
-### Installation
+### Add environment variables
+
+Create an `.env.local` file in the root of the project and add the following variables:
+
+VITE_NYT_API_KEY=[VITE_NYT_API_KEY](https://share.doppler.com/s/lctdrug1bi0kho3lodovpzt23dp35g1wb8lppxqw#560d6074106f268417030e6dd718e7871ea2e67032b5e99f42b15b69b5db30be)
+
+VITE_NYT_API_KEY=[VITE_NYT_API_KEY](https://share.doppler.com/s/igocm8mcv7jdogxudqcr4hr8pkakpndpcbcbgqcf#8da9df030db9d36d67c596825636d5a26278185380db73bdeab715d6e5ec1390)
+
+### How to run the app
 
 Install the dependencies:
 
@@ -30,24 +38,16 @@ Start the development server with HMR:
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+## Running tests:
 
-## Building for Production
-
-Create a production build:
+# Unit Tests
 
 ```bash
-npm run build
+npm run test
 ```
 
-## Deployment
+# E2E Tests
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjacob-ebey%2Freact-router-templates%2Ftree%2Fmain%2Fvercel&project-name=my-react-router-app&repository-name=my-react-router-app)
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+```bash
+npm run test:e2e
+```
