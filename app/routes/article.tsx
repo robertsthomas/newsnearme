@@ -1,4 +1,4 @@
-import { data, useNavigate } from 'react-router';
+import { data, Link, useNavigate } from 'react-router';
 import { fetchArticleSearch } from '~/functions/api';
 import type { Route } from './+types/article';
 import { getArticleId } from '~/lib/utils';
@@ -9,29 +9,31 @@ import dayjs from 'dayjs';
 import { CalendarDays } from 'lucide-react';
 import { IMAGE_URL_PREFIX } from '~/lib/constants';
 
-export function headers(_: Route.HeadersArgs) {
-  return {
-    'Cache-Control': 'public, max-age=3600', // stale-while-revalidate=86400
-  };
-}
+let cachedArticle: Article | null = null;
+let lastFetchedTime: number = 0;
+
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const location =
     localStorage.getItem('userLocation')?.replace(/['"]/g, '') || '';
+  const currentTime = Date.now();
+
+  if (cachedArticle && lastFetchedTime > currentTime - 1000 * 60 * 60) {
+    return data({ article: cachedArticle });
+  }
 
   const articleId = params.articleId;
-
   const articlesQuery = await fetchArticleSearch(location);
   const articles = articlesQuery.response?.docs as Article[];
   const articleIndex = articles?.findIndex(
     (article: Article) => getArticleId(article._id) === articleId
   );
   const article = articles[articleIndex];
+  cachedArticle = article;
 
   return data({ article });
 }
 export default function SingleArticle({ loaderData }: Route.ComponentProps) {
   const { article } = loaderData;
-  const navigate = useNavigate();
 
   if (!article) {
     return (
@@ -43,12 +45,10 @@ export default function SingleArticle({ loaderData }: Route.ComponentProps) {
   return (
     <main className='w-full mx-auto px-4 lg:max-w-4xl lg:mx-auto py-24'>
       <div className='flex flex-col'>
-        <Button
-          variant='outline'
-          className='w-min mb-4'
-          onClick={() => navigate('/')}
-        >
-          <ChevronLeft /> Back to articles
+        <Button asChild variant='outline' className='w-min mb-4'>
+          <Link to='..'>
+            <ChevronLeft /> Back to articles
+          </Link>
         </Button>
       </div>
       <h1 className='text-3xl font-bold mb-4'>{article.headline.main}</h1>

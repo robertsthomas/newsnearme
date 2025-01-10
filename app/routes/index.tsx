@@ -15,18 +15,33 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export function headers(_: Route.HeadersArgs) {
-  return {
-    'Cache-Control': 'public, max-age=3600', // stale-while-revalidate=86400
-  };
-}
+let cachedArticles: Article[] | null = null;
+let cachedLocation: string | null = null;
+let lastFetchedTime: number = 0;
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const location = url.searchParams.get('location') || '';
+  const currentTime = Date.now();
+
+  // Check if cached data exists, else fetch new data
+  if (
+    cachedArticles &&
+    cachedLocation === location &&
+    currentTime - lastFetchedTime < 86400000 // Cache is valid for 24 hours
+  ) {
+    console.log('Returning cached data');
+    return data({ articles: cachedArticles, location });
+  }
 
   const articlesQuery = await fetchArticleSearch(location);
   const articles = articlesQuery.response?.docs as Article[];
+
+  cachedArticles = articles;
+  cachedLocation = location;
+  lastFetchedTime = currentTime;
+
+  console.log('Fetched new data');
 
   return data({ articles, location });
 }
