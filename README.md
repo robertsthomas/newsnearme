@@ -2,6 +2,10 @@
 
 A React application that displays news articles from the New York Times API from preselected locations.
 
+### Live Site
+
+https://newsnearme.vercel.app/
+
 ## Technologies
 
 - React
