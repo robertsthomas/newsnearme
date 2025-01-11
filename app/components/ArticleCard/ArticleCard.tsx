@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { Card } from '../ui/card';
 import type { Article } from 'types';
 import { CalendarDays, Newspaper } from 'lucide-react';
@@ -7,12 +7,13 @@ import { IMAGE_URL_PREFIX } from '~/lib/constants';
 import { getArticleId } from '~/lib/utils';
 
 export const ArticleCard = ({ article }: { article: Article }) => {
+  const [searchParams] = useSearchParams();
   const firstImage = article.multimedia[0]?.url;
   const articleId = getArticleId(article._id);
 
   return (
     <Link
-      to={`articles/${articleId}`}
+      to={`articles/${searchParams.get('location')}/${articleId}`}
       key={article._id}
       className='hover:outline hover:outline-2 hover:outline-slate-400 rounded-lg group'
     >

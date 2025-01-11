@@ -7,44 +7,40 @@ export const useUserLocation = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams();
 
-  useEffect(() => {
-    const searchParamLocation = searchParams
-      .get('location')
-      ?.replace(/['"]/g, '');
+  const getLocationFromLocalStorage = () => {
     const storedLocation = localStorage.getItem('userLocation');
-
-    if (searchParamLocation) {
-      setLocation(searchParamLocation);
-      localStorage.setItem('userLocation', JSON.stringify(searchParamLocation));
-      return;
-    }
-
     if (storedLocation) {
-      setLocation(JSON.parse(storedLocation).replace(/['"]/g, ''));
-      params.set('location', storedLocation.replace(/['"]/g, ''));
-      setSearchParams(params);
-    } else {
-      getIp()
-        .then((data) => {
-          localStorage.setItem('userLocation', JSON.stringify(data.city));
-          setLocation(data.city.replace(/['"]/g, ''));
-          params.set('location', data.city);
-          setSearchParams(params);
-        })
-        .catch((error) => {
-          console.error('Error fetching location data:', error);
-        });
+      return JSON.parse(storedLocation).replace(/['"]/g, '');
     }
-  }, [location]);
+    return '';
+  };
+  const fetchIpLocation = async () => {
+    if (getLocationFromLocalStorage() ?? searchParams.get('location')) return;
+    getIp().then((data) => {
+      localStorage.setItem('userLocation', JSON.stringify(data.city));
+      setLocation(data.city.replace(/['"]/g, ''));
 
-  const setUserLocation = (location: string) => {
-    params.set('location', location);
-    setSearchParams(params);
-    localStorage.setItem('userLocation', JSON.stringify(location));
+      setLocationSearchParam(data.city.replace(/['"]/g, ''));
+    });
   };
 
+  const setLocationSearchParam = (location: string) => {
+    params.set('location', location);
+    setSearchParams(params);
+  };
+
+  const setUserLocation = (location: string) => {
+    setLocation(location);
+    localStorage.setItem('userLocation', JSON.stringify(location));
+    setLocationSearchParam(location);
+  };
+
+  useEffect(() => {
+    fetchIpLocation();
+  }, []);
+
   return {
-    location,
+    location: searchParams.get('location'),
     setUserLocation,
   };
 };

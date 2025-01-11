@@ -53,7 +53,7 @@ export const LocationSearch = ({
         >
           <SelectValue
             data-testid='location-search-value'
-            placeholder={location}
+            placeholder={location ?? 'Select a location'}
           />
         </SelectTrigger>
         <SelectContent>

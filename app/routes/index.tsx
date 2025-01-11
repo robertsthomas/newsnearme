@@ -1,4 +1,3 @@
-import { fetchArticleSearch } from '~/functions/api';
 import type { Route } from './+types/index';
 import type { Article } from 'types';
 import { data, useNavigation } from 'react-router';
@@ -7,6 +6,7 @@ import { useUserLocation } from '~/hooks/useUserLocation';
 import { getArticleId } from '~/lib/utils';
 import { LocationSearch } from '~/components/LocationSearch';
 import { Loader2 } from 'lucide-react';
+import { fetchArticleSearch } from '~/functions/api.server';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,21 +15,12 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+export async function loader({ request }: Route.ClientLoaderArgs) {
   const url = new URL(request.url);
   const location = url.searchParams.get('location') || '';
-  const articlesQuery = await fetchArticleSearch(location);
+  const articles = await fetchArticleSearch(location);
 
-  const articles = articlesQuery.response?.docs as Article[];
-
-  return data(
-    { articles, location },
-    {
-      headers: {
-        'Cache-Control': 'public, max-age=86400',
-      },
-    }
-  );
+  return data({ articles, location });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

@@ -1,4 +1,4 @@
-import { data, Link } from 'react-router';
+import { data, Link, useNavigate } from 'react-router';
 import { fetchArticleSearch } from '~/functions/api';
 import type { Route } from './+types/article';
 import { getArticleId } from '~/lib/utils';
@@ -8,27 +8,34 @@ import type { Article } from 'types';
 import dayjs from 'dayjs';
 import { CalendarDays } from 'lucide-react';
 import { IMAGE_URL_PREFIX } from '~/lib/constants';
+import { getSingleArticle } from '~/functions/api.server';
 
-export async function clientLoader({ params }: Route.LoaderArgs) {
-  const location =
-    localStorage.getItem('userLocation')?.replace(/['"]/g, '') || '';
+let cachedArticle: Article | null = null;
+let lastFetchedTimeArt: number = 0;
 
-  const articleId = params.articleId;
+export async function loader({ params }: Route.LoaderArgs) {
+  const currentTime = Date.now();
+  const location = params.location;
 
-  const articlesQuery = await fetchArticleSearch(location);
-  const articles = articlesQuery.response?.docs as Article[];
-  const articleIndex = articles?.findIndex(
-    (article: Article) => getArticleId(article._id) === articleId
-  );
-  const article = articles[articleIndex];
+  if (
+    cachedArticle &&
+    params.articleId === getArticleId(cachedArticle._id) &&
+    currentTime - lastFetchedTimeArt < 86400000 // Cache is valid for 24 hours
+  ) {
+    console.log('Returning cached Article');
+    return data({ article: cachedArticle });
+  }
 
-  return data(
-    { article },
-    { headers: { 'Cache-Control': 'public, max-age=86400' } }
-  );
+  const article = await getSingleArticle(params.articleId, location);
+  cachedArticle = article;
+  lastFetchedTimeArt = currentTime;
+  console.log('Fetched new Article');
+
+  return data({ article });
 }
 export default function SingleArticle({ loaderData }: Route.ComponentProps) {
   const { article } = loaderData;
+  const navigate = useNavigate();
 
   if (!article) {
     return (
@@ -40,10 +47,12 @@ export default function SingleArticle({ loaderData }: Route.ComponentProps) {
   return (
     <main className='w-full mx-auto px-4 lg:max-w-4xl lg:mx-auto py-24'>
       <div className='flex flex-col'>
-        <Button asChild variant='outline' className='w-min mb-4'>
-          <Link to='..'>
-            <ChevronLeft /> Back to articles
-          </Link>
+        <Button
+          variant='outline'
+          className='w-min mt-6 mb-10'
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft /> Back to articles
         </Button>
       </div>
       <h1 className='text-3xl font-bold mb-4'>{article.headline.main}</h1>
