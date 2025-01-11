@@ -48,7 +48,7 @@ function ArticleCardHeader({
         data-testid='article-card-image'
         src={`${IMAGE_URL_PREFIX}${image}`}
         alt={article.headline.main}
-        className='w-full h-1/2 object-cover object-center rounded-t-lg'
+        className='w-full h-1/2 object-cover object-top rounded-t-lg'
       />
     );
   }

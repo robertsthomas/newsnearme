@@ -1,4 +1,4 @@
-import { data, Link, useNavigate } from 'react-router';
+import { data, Link } from 'react-router';
 import { fetchArticleSearch } from '~/functions/api';
 import type { Route } from './+types/article';
 import { getArticleId } from '~/lib/utils';
@@ -9,28 +9,23 @@ import dayjs from 'dayjs';
 import { CalendarDays } from 'lucide-react';
 import { IMAGE_URL_PREFIX } from '~/lib/constants';
 
-let cachedArticle: Article | null = null;
-let lastFetchedTime: number = 0;
-
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const location =
     localStorage.getItem('userLocation')?.replace(/['"]/g, '') || '';
-  const currentTime = Date.now();
-
-  if (cachedArticle && lastFetchedTime > currentTime - 1000 * 60 * 60) {
-    return data({ article: cachedArticle });
-  }
 
   const articleId = params.articleId;
+
   const articlesQuery = await fetchArticleSearch(location);
   const articles = articlesQuery.response?.docs as Article[];
   const articleIndex = articles?.findIndex(
     (article: Article) => getArticleId(article._id) === articleId
   );
   const article = articles[articleIndex];
-  cachedArticle = article;
 
-  return data({ article });
+  return data(
+    { article },
+    { headers: { 'Cache-Control': 'public, max-age=86400' } }
+  );
 }
 export default function SingleArticle({ loaderData }: Route.ComponentProps) {
   const { article } = loaderData;
@@ -62,7 +57,7 @@ export default function SingleArticle({ loaderData }: Route.ComponentProps) {
           <img
             src={`${IMAGE_URL_PREFIX}${article.multimedia[0].url}`}
             alt={article.headline.main}
-            className='w-full h-96 object-cover object-bottom rounded-lg'
+            className='w-full h-96 object-cover object-top rounded-lg'
           />
 
           <p className='text-gray-700 text-sm mt-2'>
