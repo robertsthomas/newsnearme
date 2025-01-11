@@ -1,11 +1,25 @@
 import type { Article } from 'types';
 import { getArticleId } from '~/lib/utils';
 
+/**
+ * This file only runs on the server via the loader function.
+ * If we want to run functions client side, we need to create an api.client.ts file.
+ */
+
+// Setup articles cache
 let cachedArticles: Article[] | null = null;
 let cachedLocation: string | null = null;
 let lastFetchedTime: number = 0;
 
 export const fetchArticleSearch = async (location: string) => {
+  /**
+   * Fetches articles from the New York Times API
+   * We cache the articles array for 24 hours
+   * If the location is the same as the last fetched location
+   * and the cache is valid we return the cached articles array.
+   * Cache is based on the location and the current time.
+   */
+
   const currentTime = Date.now();
 
   if (
@@ -35,6 +49,10 @@ export const fetchArticleSearch = async (location: string) => {
 };
 
 export async function getSingleArticle(id: string, location: string) {
+  /**
+   * Filters the articles array to find the article with the given id
+   * and returns the article object.
+   */
   const articles = await fetchArticleSearch(location);
 
   const articleIndex = articles?.findIndex(

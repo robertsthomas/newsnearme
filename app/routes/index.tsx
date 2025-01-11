@@ -1,12 +1,9 @@
 import type { Route } from './+types/index';
-import type { Article } from 'types';
 import { data, useNavigation } from 'react-router';
-import { ArticleCard } from '~/components/ArticleCard';
-import { useUserLocation } from '~/hooks/useUserLocation';
+import { useUserLocation } from '~/hooks';
 import { getArticleId } from '~/lib/utils';
-import { LocationSearch } from '~/components/LocationSearch';
-import { Loader2 } from 'lucide-react';
 import { fetchArticleSearch } from '~/functions/api.server';
+import { ArticleCard, LocationSearch, PageLoader } from '~/components';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,6 +13,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.ClientLoaderArgs) {
+  // Fetch articles based on url search params "location"
   const url = new URL(request.url);
   const location = url.searchParams.get('location') || '';
   const articles = await fetchArticleSearch(location);
@@ -24,19 +22,13 @@ export async function loader({ request }: Route.ClientLoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { articles, location } = loaderData;
   const { setUserLocation } = useUserLocation();
   const navigation = useNavigation();
+
+  const { articles, location } = loaderData;
   const isNavigating = Boolean(navigation.location);
 
-  if (isNavigating) {
-    return (
-      <div className='container flex flex-col gap-3 items-center justify-center h-screen'>
-        <Loader2 className='w-12 h-12 text-gray-600 animate-spin' />
-        <p>Loading article detail</p>
-      </div>
-    );
-  }
+  if (isNavigating) return <PageLoader />;
 
   return (
     <main className='container mx-auto px-4 py-24 h-screen pb-44'>

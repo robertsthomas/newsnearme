@@ -1,12 +1,12 @@
 import { useLocation, useNavigate } from 'react-router';
-import { useUserLocation } from '~/hooks/useUserLocation';
+import { useUserLocation } from '~/hooks';
 import { LocationSearch } from '../LocationSearch';
 
 export const GlobalHeader = () => {
   const location = useLocation();
   let navigate = useNavigate();
+
   const { location: userLocation, setUserLocation } = useUserLocation();
-  console.log('userLocation', userLocation);
 
   const handleSearch = async (location: string) => {
     await navigate(`../?location=${location}`);

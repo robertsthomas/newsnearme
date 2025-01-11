@@ -1,5 +1,4 @@
-import { data, Link, useNavigate } from 'react-router';
-import { fetchArticleSearch } from '~/functions/api';
+import { data, useNavigate } from 'react-router';
 import type { Route } from './+types/article';
 import { getArticleId } from '~/lib/utils';
 import { Button } from '~/components/ui/button';
@@ -10,6 +9,7 @@ import { CalendarDays } from 'lucide-react';
 import { IMAGE_URL_PREFIX } from '~/lib/constants';
 import { getSingleArticle } from '~/functions/api.server';
 
+// Setup articling cache
 let cachedArticle: Article | null = null;
 let lastFetchedTimeArt: number = 0;
 
@@ -34,12 +34,13 @@ export async function loader({ params }: Route.LoaderArgs) {
   return data({ article });
 }
 export default function SingleArticle({ loaderData }: Route.ComponentProps) {
-  const { article } = loaderData;
   const navigate = useNavigate();
+
+  const { article } = loaderData;
 
   if (!article) {
     return (
-      <main className='container mx-auto px-4 py-24'>
+      <main className='container flex items-center justify-center mx-auto px-4 py-24'>
         <p>Article not found</p>
       </main>
     );

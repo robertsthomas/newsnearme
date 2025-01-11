@@ -8,6 +8,7 @@ import { getArticleId } from '~/lib/utils';
 
 export const ArticleCard = ({ article }: { article: Article }) => {
   const [searchParams] = useSearchParams();
+
   const firstImage = article.multimedia[0]?.url;
   const articleId = getArticleId(article._id);
 

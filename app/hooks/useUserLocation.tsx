@@ -1,9 +1,15 @@
 import { getIp } from '~/lib/ip';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 
+/**
+ *
+ * This hook fetches the user's location from the browser's IP address.
+ * It also sets the location in the URL search params which is used
+ * in loaders to fetch articles for a specific location.
+ */
+
 export const useUserLocation = () => {
-  const [location, setLocation] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams();
 
@@ -17,8 +23,10 @@ export const useUserLocation = () => {
   const fetchIpLocation = async () => {
     if (getLocationFromLocalStorage() ?? searchParams.get('location')) return;
     getIp().then((data) => {
-      localStorage.setItem('userLocation', JSON.stringify(data.city));
-      setLocation(data.city.replace(/['"]/g, ''));
+      localStorage.setItem(
+        'userLocation',
+        JSON.stringify(data.city.replace(/['"]/g, ''))
+      );
 
       setLocationSearchParam(data.city.replace(/['"]/g, ''));
     });
@@ -30,7 +38,6 @@ export const useUserLocation = () => {
   };
 
   const setUserLocation = (location: string) => {
-    setLocation(location);
     localStorage.setItem('userLocation', JSON.stringify(location));
     setLocationSearchParam(location);
   };

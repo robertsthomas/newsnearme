@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { states } from '~/lib/constants';
-import { useUserLocation } from '~/hooks/useUserLocation';
+import { useUserLocation } from '~/hooks';
 
 export const LocationSearch = ({
   withButton = false,
@@ -21,6 +21,7 @@ export const LocationSearch = ({
   onSearch: (location: string) => void;
 }) => {
   const { location } = useUserLocation();
+
   const inputSizeMap =
     size === 'lg'
       ? 'size-12 placeholder:text-lg'
