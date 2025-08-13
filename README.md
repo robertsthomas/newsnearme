@@ -4,7 +4,7 @@ A React application that displays news articles from the New York Times API from
 
 ### Live Site
 
-https://newsnearme.vercel.app/
+[https://newsnearme.vercel.app/](https://newsnearme.vercel.app/)
 
 ## Technologies
 
