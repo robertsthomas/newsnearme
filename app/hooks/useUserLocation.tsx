@@ -14,23 +14,28 @@ export const useUserLocation = () => {
   const params = new URLSearchParams();
 
   const getLocationFromLocalStorage = () => {
-    const storedLocation = localStorage.getItem('userLocation');
-    if (storedLocation) {
-      return JSON.parse(storedLocation).replace(/['"]/g, '');
-    }
-    return '';
-  };
-  const fetchIpLocation = async () => {
-    if (getLocationFromLocalStorage() ?? searchParams.get('location')) return;
-    getIp().then((data) => {
-      localStorage.setItem(
-        'userLocation',
-        JSON.stringify(data.city.replace(/['"]/g, ''))
-      );
+  const storedLocation = localStorage.getItem('userLocation');
+  if (storedLocation) {
+    const parsed = JSON.parse(storedLocation);
+    return typeof parsed === 'string' ? parsed.replace(/['"]/g, '') : '';
+  }
+  return '';
+};
 
-      setLocationSearchParam(data.city.replace(/['"]/g, ''));
-    });
-  };
+const fetchIpLocation = async () => {
+  if (getLocationFromLocalStorage() || searchParams.get('location')) return;
+  try {
+    const data = await getIp();
+    if (data?.city && typeof data.city === 'string') {
+      const cleanCity = data.city.replace(/['"]/g, '');
+      localStorage.setItem('userLocation', JSON.stringify(cleanCity));
+      setLocationSearchParam(cleanCity);
+    }
+  } catch (err) {
+    console.error('Failed to fetch IP location', err);
+  }
+};
+
 
   const setLocationSearchParam = (location: string) => {
     params.set('location', location);
